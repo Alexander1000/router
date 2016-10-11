@@ -3,6 +3,7 @@
 namespace Tests\Router;
 
 use Router\Router;
+use Router\Exception\NotFound;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,6 +43,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     'action' => 'dk',
                     'controller' => 'AdminController'
                 ]
+            ],
+            [
+                '/test/v4/ts',
+                []
             ]
         ];
     }
@@ -78,10 +83,20 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             ->setSchema('site')
             ->setUri($uri);
 
-        $response = $router->resolve();
+        try {
+            $response = $router->resolve();
 
-        foreach ($params as $key => $value) {
-            $this->assertEquals($value, $response->{$key});
+            if (empty($params)) {
+                $this->fail('Exception expected');
+            }
+
+            foreach ($params as $key => $value) {
+                $this->assertEquals($value, $response->{$key});
+            }
+        } catch (NotFound $e) {
+            if (!empty($params)) {
+                $this->fail('Exception not expected');
+            }
         }
     }
 }
