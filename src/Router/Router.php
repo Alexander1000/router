@@ -70,7 +70,9 @@ class Router implements IRouter
     public function resolve()
     {
         foreach ($this->getRoutes() as $routeInfo) {
-
+            if (preg_match($routeInfo[$this->patternField], $this->uri)) {
+                // @todo сравнение
+            }
         }
 
         return new Request();
