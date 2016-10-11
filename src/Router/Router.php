@@ -10,7 +10,7 @@ class Router implements IRouter
     protected $routes;
 
     /**
-     * @var
+     * @var string
      */
     protected $uri;
 
@@ -24,6 +24,9 @@ class Router implements IRouter
      */
     protected $schema;
 
+    /**
+     * @var string
+     */
     protected $patternField = 'uri';
 
     public function __construct()
@@ -89,11 +92,10 @@ class Router implements IRouter
                         $class = new static();
                     }
 
-                    /** @var IRouter $class */
                     $subRouteParts = explode('/', $routeInfo['route']);
-
                     $schemaName = array_pop($subRouteParts);
 
+                    /** @var IRouter $class */
                     if (empty($subRouteParts)) {
                         $class->setBasePath($this->basePath);
                     } else {
