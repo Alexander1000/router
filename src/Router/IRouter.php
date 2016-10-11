@@ -37,4 +37,11 @@ interface IRouter
      * @return IRequest
      */
     public function resolve();
+
+    /**
+     * Список маршрутов
+     *
+     * @return array
+     */
+    public function getRoutes();
 }

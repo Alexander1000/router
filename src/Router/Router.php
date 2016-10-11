@@ -66,53 +66,64 @@ class Router implements IRouter
 
     /**
      * @return IRequest
+     *
+     * @throws Exception\NotFound
      */
     public function resolve()
     {
         foreach ($this->getRoutes() as $routeInfo) {
-            if (preg_match($routeInfo[$this->patternField], $this->uri)) {
-                // @todo сравнение
+            $regexp = sprintf('#%s#si', $routeInfo[$this->patternField]);
+
+            if (preg_match($regexp, $this->uri)) {
+                if (isset($routeInfo['route'])) {
+                    return $this->getRouterFromInfo($routeInfo)
+                        ->setUri(preg_replace($regexp, '', $this->uri))
+                        ->resolve();
+                } else {
+                    return new Request($routeInfo);
+                }
             }
         }
 
-        return new Request();
+        throw new Exception\NotFound();
     }
 
     /**
      * @return array
      */
-    protected function getRoutes()
+    public function getRoutes()
     {
         if (empty($this->routes)) {
             $this->routes = yaml_parse_file(sprintf('%s/%s.yml', $this->basePath, $this->schema));
-
-            foreach ($this->routes as $routeName => $routeInfo) {
-                if (isset($routeInfo['route'])) {
-                    if (isset($routeInfo['class'])) {
-                        $class = new $routeInfo['class']();
-                    } else {
-                        $class = new static();
-                    }
-
-                    $subRouteParts = explode('/', $routeInfo['route']);
-                    $schemaName = array_pop($subRouteParts);
-
-                    /** @var IRouter $class */
-                    if (empty($subRouteParts)) {
-                        $class->setBasePath($this->basePath);
-                    } else {
-                        $class->setBasePath($this->basePath . '/' . implode('/', $subRouteParts));
-                    }
-
-                    $class->setSchema($schemaName);
-
-                    $routeInfo['routes'] = $class->getRoutes();
-
-                    $this->routes[$routeName] = $routeInfo;
-                }
-            }
         }
 
         return $this->routes;
+    }
+
+    /**
+     * @param array $routeInfo
+     * @return IRouter
+     */
+    protected function getRouterFromInfo(array $routeInfo)
+    {
+        if (isset($routeInfo['class'])) {
+            $class = new $routeInfo['class']();
+        } else {
+            $class = new static();
+        }
+
+        $subRouteParts = explode('/', $routeInfo['route']);
+        $schemaName = array_pop($subRouteParts);
+
+        /** @var IRouter $class */
+        if (empty($subRouteParts)) {
+            $class->setBasePath($this->basePath);
+        } else {
+            $class->setBasePath($this->basePath . '/' . implode('/', $subRouteParts));
+        }
+
+        $class->setSchema($schemaName);
+
+        return $class;
     }
 }
