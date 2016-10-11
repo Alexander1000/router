@@ -73,6 +73,9 @@ class Router implements IRouter
         return new Request();
     }
 
+    /**
+     * @return array
+     */
     protected function getRoutes()
     {
         if (empty($this->routes)) {
