@@ -1,8 +1,14 @@
-base:
-  uri: /
-
 base_v1:
   uri: /v2/kkk
+  action: kk
+  controller: AdminController
 
 base_v2:
   uri: /v3/dk
+  action: dk
+  controller: AdminController
+
+base:
+  uri: /
+  action: default
+  controller: AdminController

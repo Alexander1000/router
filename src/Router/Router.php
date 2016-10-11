@@ -40,7 +40,7 @@ class Router implements IRouter
      */
     public function setUri(string $uri)
     {
-        $this->uri = $uri;
+        $this->uri = $uri ? $uri : '/';
         return $this;
     }
 
