@@ -1,0 +1,7 @@
+test_v1:
+  uri: /34
+
+test_v2:
+  uri: /sun
+  class: \Router\Router
+  route: sub/admin

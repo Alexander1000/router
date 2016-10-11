@@ -1,0 +1,8 @@
+base:
+  uri: /
+
+base_v1:
+  uri: /v2/kkk
+
+base_v2:
+  uri: /v3/dk

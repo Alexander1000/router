@@ -2,3 +2,13 @@ main:
   uri: /
   param1: test
   param2: test2
+
+main_v2:
+  uri: /test
+  class: \Router\Router
+  route: sub/admin
+
+main_v3:
+  uri: /sub
+  class: \Router\Router
+  route: admin

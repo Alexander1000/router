@@ -5,11 +5,6 @@ namespace Router;
 class Router implements IRouter
 {
     /**
-     * @var string
-     */
-    protected $routePath;
-
-    /**
      * @var array
      */
     protected $routes;
@@ -19,9 +14,21 @@ class Router implements IRouter
      */
     protected $uri;
 
+    /**
+     * @var string
+     */
+    protected $basePath;
+
+    /**
+     * @var string
+     */
+    protected $schema;
+
+    protected $patternField = 'uri';
+
     public function __construct()
     {
-        $this->uri = $_SERVER['REQUEST_URI'];
+        $this->uri = $_SERVER['REQUEST_URI'] ?? null;
     }
 
     /**
@@ -35,12 +42,22 @@ class Router implements IRouter
     }
 
     /**
-     * @param string $routePath
+     * @param string $schema
      * @return $this
      */
-    public function setRoutePath(string $routePath)
+    public function setSchema(string $schema)
     {
-        $this->routePath = $routePath;
+        $this->schema = $schema;
+        return $this;
+    }
+
+    /**
+     * @param string $basePath
+     * @return $this
+     */
+    public function setBasePath(string $basePath)
+    {
+        $this->basePath = $basePath;
         return $this;
     }
 
@@ -49,6 +66,46 @@ class Router implements IRouter
      */
     public function resolve()
     {
+        foreach ($this->getRoutes() as $routeInfo) {
+
+        }
+
         return new Request();
+    }
+
+    protected function getRoutes()
+    {
+        if (empty($this->routes)) {
+            $this->routes = yaml_parse_file(sprintf('%s/%s.yml', $this->basePath, $this->schema));
+
+            foreach ($this->routes as $routeName => $routeInfo) {
+                if (isset($routeInfo['route'])) {
+                    if (isset($routeInfo['class'])) {
+                        $class = new $routeInfo['class']();
+                    } else {
+                        $class = new static();
+                    }
+
+                    /** @var IRouter $class */
+                    $subRouteParts = explode('/', $routeInfo['route']);
+
+                    $schemaName = array_pop($subRouteParts);
+
+                    if (empty($subRouteParts)) {
+                        $class->setBasePath($this->basePath);
+                    } else {
+                        $class->setBasePath($this->basePath . '/' . implode('/', $subRouteParts));
+                    }
+
+                    $class->setSchema($schemaName);
+
+                    $routeInfo['routes'] = $class->getRoutes();
+
+                    $this->routes[$routeName] = $routeInfo;
+                }
+            }
+        }
+
+        return $this->routes;
     }
 }
