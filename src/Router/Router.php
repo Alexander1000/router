@@ -75,6 +75,8 @@ class Router implements IRouter
      */
     public function resolve()
     {
+        $this->uri = preg_replace('/(.*?)\?.*/si', '$1', $this->uri);
+
         foreach ($this->getRoutes() as $routeInfo) {
             $regexp = sprintf('#%s#si', $routeInfo[$this->patternField]);
 
