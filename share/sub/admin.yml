@@ -1,3 +1,8 @@
+base:
+  uri: /
+  action: default
+  controller: AdminController
+
 base_v1:
   uri: /v2/kkk
   action: kk
@@ -8,7 +13,7 @@ base_v2:
   action: dk
   controller: AdminController
 
-base:
-  uri: /
-  action: default
-  controller: AdminController
+user:
+  uri: /user/{userId:integer}/edit
+  action: updateUser
+  controller: UserController
