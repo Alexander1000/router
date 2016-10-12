@@ -10,5 +10,4 @@ main_v2:
 
 main_v3:
   uri: /sub
-  class: \Router\Router
   route: admin

@@ -47,7 +47,45 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             [
                 '/test/v4/ts',
                 []
-            ]
+            ],
+            [
+                '/sub',
+                []
+            ],
+            [
+                '/sub/34',
+                [
+                    'uri' => '/34'
+                ]
+            ],
+            [
+                '/sub/sun',
+                [
+                    'uri' => '/',
+                    'action' => 'default',
+                    'controller' => 'AdminController'
+                ]
+            ],
+            [
+                '/sub/sun/v2/kkk',
+                [
+                    'uri' => '/v2/kkk',
+                    'action' => 'kk',
+                    'controller' => 'AdminController'
+                ]
+            ],
+            [
+                '/sub/sun/v3/dk',
+                [
+                    'uri' => '/v3/dk',
+                    'action' => 'dk',
+                    'controller' => 'AdminController'
+                ]
+            ],
+            [
+                '/sub/sun/v4/ts',
+                []
+            ],
         ];
     }
 
