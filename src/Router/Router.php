@@ -74,12 +74,12 @@ class Router implements IRouter
         foreach ($this->getRoutes() as $routeInfo) {
             $regexp = sprintf('#%s#si', $routeInfo[$this->patternField]);
 
-            if (preg_match($regexp, $this->uri)) {
+            if (preg_match($regexp, $this->uri, $matches)) {
                 if (isset($routeInfo['route'])) {
                     return $this->getRouterFromInfo($routeInfo)
                         ->setUri(preg_replace($regexp, '', $this->uri))
                         ->resolve();
-                } else {
+                } elseif (strlen($this->uri) == strlen($matches[0])) {
                     return new Request($routeInfo);
                 }
             }
