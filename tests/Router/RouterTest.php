@@ -86,23 +86,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 '/sub/sun/v4/ts',
                 []
             ],
+            [
+                '/jj',
+                []
+            ]
         ];
-    }
-
-    /**
-     * Проверка построения маршрутов
-     */
-    public function testRouter()
-    {
-        $this->markTestSkipped();
-
-        $router = new Router();
-
-        $router->setBasePath(__DIR__ . '/../../share')
-            ->setSchema('site')
-            ->setUri('/');
-
-        $router->resolve();
     }
 
     /**
