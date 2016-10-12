@@ -35,8 +35,7 @@ class Router implements IRouter
     }
 
     /**
-     * @param string $uri
-     * @return $this
+     * {@inheritdoc}
      */
     public function setUri(string $uri)
     {
@@ -45,8 +44,7 @@ class Router implements IRouter
     }
 
     /**
-     * @param string $schema
-     * @return $this
+     * {@inheritdoc}
      */
     public function setSchema(string $schema)
     {
@@ -55,8 +53,7 @@ class Router implements IRouter
     }
 
     /**
-     * @param string $basePath
-     * @return $this
+     * {@inheritdoc}
      */
     public function setBasePath(string $basePath)
     {
@@ -65,9 +62,16 @@ class Router implements IRouter
     }
 
     /**
-     * @return IRequest
-     *
-     * @throws Exception\NotFound
+     * {@inheritdoc}
+     */
+    public function setPatternField(string $patternField)
+    {
+        $this->patternField = $patternField;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function resolve()
     {
@@ -89,7 +93,7 @@ class Router implements IRouter
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getRoutes()
     {
@@ -101,7 +105,10 @@ class Router implements IRouter
     }
 
     /**
+     * Получаем вложенный IRouter
+     *
      * @param array $routeInfo
+     *
      * @return IRouter
      */
     protected function getRouterFromInfo(array $routeInfo)

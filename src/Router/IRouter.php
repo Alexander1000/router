@@ -14,6 +14,15 @@ interface IRouter
     public function setUri(string $uri);
 
     /**
+     * Шаблон для поиска по запросу
+     *
+     * @param string $patternField
+     *
+     * @return $this
+     */
+    public function setPatternField(string $patternField);
+
+    /**
      * Схема
      *
      * @param string $schema
@@ -35,6 +44,8 @@ interface IRouter
      * Возвращает подходящий сценарий в виде объекта IRequest
      *
      * @return IRequest
+     *
+     * @throws Exception\NotFound
      */
     public function resolve();
 
