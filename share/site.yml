@@ -11,3 +11,7 @@ main_v2:
 main_v3:
   uri: /sub
   route: admin
+
+shop_test:
+  uri: /shop/{shopName:string}
+  route: sub/admin

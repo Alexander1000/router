@@ -36,7 +36,7 @@ class Router implements IRouter
     protected $replacement = [
         'integer' => '\d+',
         'int' => '\d+',
-        'string' => '[\w\d]+'
+        'string' => '[\w\d_-]+'
     ];
 
     public function __construct()

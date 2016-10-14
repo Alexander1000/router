@@ -95,5 +95,26 @@ return [
                 'userId' => 123
             ]
         ]
+    ],
+    [
+        '/shop/shop-name',
+        [
+            'action' => 'default',
+            'controller' => 'AdminController',
+            'params' => [
+                'shopName' => 'shop-name'
+            ]
+        ]
+    ],
+    [
+        '/shop/shop-name/user/934/edit',
+        [
+            'action' => 'updateUser',
+            'controller' => 'UserController',
+            'params' => [
+                'shopName' => 'shop-name',
+                'userId' => 934
+            ]
+        ]
     ]
 ];
