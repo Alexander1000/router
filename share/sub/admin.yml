@@ -2,18 +2,22 @@ base:
   uri: /
   action: default
   controller: AdminController
+  method: GET POST PUT
 
 base_v1:
   uri: /v2/kkk
   action: kk
   controller: AdminController
+  method: GET
 
 base_v2:
   uri: /v3/dk
   action: dk
   controller: AdminController
+  method: POST GET
 
 user:
   uri: /user/{userId:integer}/edit
   action: updateUser
   controller: UserController
+  method: PUT

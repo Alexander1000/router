@@ -20,15 +20,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider getDataRequest
      *
+     * @param string $method
      * @param string $uri
      * @param array $params
      */
-    public function testResolve(string $uri, array $params)
+    public function testResolve(string $method, string $uri, array $params)
     {
         $router = new Router();
 
         $router->setBasePath(__DIR__ . '/../../share')
             ->setSchema('site')
+            ->setMethod($method)
             ->setUri($uri);
 
         try {

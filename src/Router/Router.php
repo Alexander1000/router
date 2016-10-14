@@ -29,9 +29,26 @@ class Router implements IRouter
      */
     protected $patternField = 'uri';
 
+    /**
+     * Переменные из placeholder'ов
+     *
+     * @var array
+     */
     protected $vars = [];
 
+    /**
+     * Список placeholder'ов
+     *
+     * @var string[]
+     */
     protected $placeholders;
+
+    /**
+     * Метод
+     *
+     * @var string
+     */
+    protected $method;
 
     protected $replacement = [
         'integer' => '\d+',
@@ -81,6 +98,24 @@ class Router implements IRouter
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setMethod(string $method)
+    {
+        $this->method = strtoupper($method);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setVars(array $vars)
+    {
+        $this->vars = $vars;
+        return $this;
+    }
+
+    /**
      * @param string $uri
      * @return string
      */
@@ -103,12 +138,16 @@ class Router implements IRouter
     }
 
     /**
-     * {@inheritdoc}
+     * Дополнительные проверки маршрута
+     *
+     * @param array $routeInfo
+     *
+     * @return bool
      */
-    public function setVars(array $vars)
+    protected function isValid(array $routeInfo): bool
     {
-        $this->vars = $vars;
-        return $this;
+        $methodList = explode(' ', strtoupper($routeInfo['method'] ?? 'GET'));
+        return in_array($this->method, $methodList);
     }
 
     /**
@@ -122,12 +161,13 @@ class Router implements IRouter
             $pattern = $this->filterPlaceholders($routeInfo[$this->patternField]);
             $regexp = sprintf('#%s#si', $pattern);
 
-            if (preg_match($regexp, $this->uri, $matches)) {
+            if (preg_match($regexp, $this->uri, $matches) && $this->isValid($routeInfo)) {
                 if (isset($routeInfo['route'])) {
                     array_shift($matches);
 
                     return $this->getRouterFromInfo($routeInfo)
                         ->setUri(preg_replace($regexp, '', $this->uri))
+                        ->setMethod($this->method)
                         ->setVars(
                             array_merge(
                                 $this->vars,

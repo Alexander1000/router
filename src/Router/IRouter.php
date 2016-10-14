@@ -64,4 +64,13 @@ interface IRouter
      * @return $this
      */
     public function setVars(array $vars);
+
+    /**
+     * REST - Метод
+     *
+     * @param string $method
+     *
+     * @return $this
+     */
+    public function setMethod(string $method);
 }

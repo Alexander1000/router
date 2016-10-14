@@ -1,14 +1,18 @@
 <?php
 
 return [
+    // #0
     [
+        'get',
         '/',
         [
             'param1' => 'test',
             'param2' => 'test2'
         ]
     ],
+    // #1
     [
+        'get',
         '/test',
         [
             'uri' => '/',
@@ -16,7 +20,9 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #2
     [
+        'get',
         '/test/v2/kkk',
         [
             'uri' => '/v2/kkk',
@@ -24,7 +30,9 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #3
     [
+        'get',
         '/test/v3/dk',
         [
             'uri' => '/v3/dk',
@@ -32,21 +40,29 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #4
     [
+        'get',
         '/test/v4/ts',
         []
     ],
+    // #5
     [
+        'get',
         '/sub',
         []
     ],
+    // #6
     [
+        'get',
         '/sub/34',
         [
             'uri' => '/34'
         ]
     ],
+    // #7
     [
+        'get',
         '/sub/sun',
         [
             'uri' => '/',
@@ -54,7 +70,9 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #8
     [
+        'get',
         '/sub/sun/v2/kkk',
         [
             'uri' => '/v2/kkk',
@@ -62,7 +80,9 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #9
     [
+        'get',
         '/sub/sun/v3/dk',
         [
             'uri' => '/v3/dk',
@@ -70,15 +90,21 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #10
     [
+        'get',
         '/sub/sun/v4/ts',
         []
     ],
+    // #11
     [
+        'get',
         '/jj',
         []
     ],
+    // #12
     [
+        'get',
         '/sub/sun/v3/dk?test=1',
         [
             'uri' => '/v3/dk',
@@ -86,7 +112,9 @@ return [
             'controller' => 'AdminController'
         ]
     ],
+    // #13
     [
+        'put',
         '/test/user/123/edit',
         [
             'action' => 'updateUser',
@@ -96,7 +124,9 @@ return [
             ]
         ]
     ],
+    // #14
     [
+        'put',
         '/shop/shop-name',
         [
             'action' => 'default',
@@ -106,7 +136,9 @@ return [
             ]
         ]
     ],
+    // #15
     [
+        'put',
         '/shop/shop-name/user/934/edit',
         [
             'action' => 'updateUser',
