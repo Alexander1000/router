@@ -29,6 +29,16 @@ class Router implements IRouter
      */
     protected $patternField = 'uri';
 
+    protected $vars = [];
+
+    protected $placeholders;
+
+    protected $replacement = [
+        'integer' => '\d+',
+        'int' => '\d+',
+        'string' => '[\w\d]+'
+    ];
+
     public function __construct()
     {
         $this->uri = $_SERVER['REQUEST_URI'] ?? null;
@@ -71,6 +81,37 @@ class Router implements IRouter
     }
 
     /**
+     * @param string $uri
+     * @return string
+     */
+    protected function filterPlaceholders(string $uri)
+    {
+        $this->placeholders = [];
+
+        return preg_replace_callback(
+            '#\{([\w\d]+):([\w\d]+)\}#si',
+            function ($matches) {
+                if (isset($this->replacement[$matches[2]])) {
+                    $this->placeholders[] = $matches[1];
+                    return sprintf('(%s)', $this->replacement[$matches[2]]);
+                }
+
+                return $matches[0];
+            },
+            $uri
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setVars(array $vars)
+    {
+        $this->vars = $vars;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function resolve()
@@ -78,15 +119,24 @@ class Router implements IRouter
         $this->uri = preg_replace('/(.*?)\?.*/si', '$1', $this->uri);
 
         foreach ($this->getRoutes() as $routeInfo) {
-            $regexp = sprintf('#%s#si', $routeInfo[$this->patternField]);
+            $pattern = $this->filterPlaceholders($routeInfo[$this->patternField]);
+            $regexp = sprintf('#%s#si', $pattern);
 
             if (preg_match($regexp, $this->uri, $matches)) {
                 if (isset($routeInfo['route'])) {
+                    array_shift($matches);
+
                     return $this->getRouterFromInfo($routeInfo)
                         ->setUri(preg_replace($regexp, '', $this->uri))
+                        ->setVars(
+                            array_merge(
+                                $this->vars,
+                                array_combine($this->placeholders, $matches)
+                            )
+                        )
                         ->resolve();
                 } elseif (strlen($this->uri) == strlen($matches[0])) {
-                    return new Request($routeInfo);
+                    return new Request($routeInfo + ['params' => $this->vars]);
                 }
             }
         }

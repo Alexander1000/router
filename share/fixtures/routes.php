@@ -90,7 +90,10 @@ return [
         '/test/user/123/edit',
         [
             'action' => 'updateUser',
-            'controller' => 'UserController'
+            'controller' => 'UserController',
+            'params' => [
+                'userId' => 123
+            ]
         ]
     ]
 ];

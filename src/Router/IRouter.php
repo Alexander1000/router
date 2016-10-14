@@ -55,4 +55,13 @@ interface IRouter
      * @return array
      */
     public function getRoutes();
+
+    /**
+     * Переменные
+     *
+     * @param array $vars
+     *
+     * @return $this
+     */
+    public function setVars(array $vars);
 }
