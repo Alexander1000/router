@@ -148,5 +148,20 @@ return [
                 'userId' => 934
             ]
         ]
-    ]
+    ],
+    // #16
+    [
+        'post',
+        '/',
+        [
+            'param1' => 'test',
+            'param2' => 'test2'
+        ]
+    ],
+    // #17
+    [
+        'get',
+        '/shop/shop-name/user/934/edit',
+        []
+    ],
 ];
