@@ -29,6 +29,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new Router();
 
         $router->setBasePath(__DIR__ . '/../../share')
+            ->setPatternField('uri')
             ->setSchema('site')
             ->setMethod($method)
             ->setUri($uri);
