@@ -1,6 +1,7 @@
-### 0.0.3 (in progress)
+### 0.0.3
 - Рефакторинг тестов
 - Добавлены placeholder'ы в uri
+- Типы placeholder'ов integer(int), string
 
 ### 0.0.2
 - Исправлен баг с get-параметрами
