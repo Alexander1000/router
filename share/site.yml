@@ -7,7 +7,6 @@ main_v2:
   uri: /test
   class: \Router\Router
   route: sub/admin
-  method: GET POST PUT
 
 main_v3:
   uri: /sub
@@ -16,4 +15,3 @@ main_v3:
 shop_test:
   uri: /shop/{shopName:string}
   route: sub/admin
-  method: PUT

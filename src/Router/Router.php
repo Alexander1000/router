@@ -146,8 +146,11 @@ class Router implements IRouter
      */
     protected function isValid(array $routeInfo): bool
     {
-        $methodList = explode(' ', strtoupper($routeInfo['method'] ?? 'GET'));
-        return in_array($this->method, $methodList);
+        if (!empty($routeInfo['method'])) {
+            return in_array($this->method, explode(' ', strtoupper($routeInfo['method'])));
+        }
+
+        return true;
     }
 
     /**
