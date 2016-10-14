@@ -136,6 +136,8 @@ class Router implements IRouter
                         )
                         ->resolve();
                 } elseif (strlen($this->uri) == strlen($matches[0])) {
+                    array_shift($matches);
+                    $this->setVars(array_merge($this->vars, array_combine($this->placeholders, $matches)));
                     return new Request($routeInfo + ['params' => $this->vars]);
                 }
             }
