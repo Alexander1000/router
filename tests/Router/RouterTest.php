@@ -7,6 +7,8 @@ use Router\Exception\NotFound;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+    const PATTERN_FIELD = 'uri';
+
     /**
      * @return array
      */
@@ -29,7 +31,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new Router();
 
         $router->setBasePath(__DIR__ . '/../../share')
-            ->setPatternField('uri')
+            ->setPatternField(self::PATTERN_FIELD)
             ->setSchema('site')
             ->setMethod($method)
             ->setUri($uri);
@@ -49,5 +51,51 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 $this->fail('Exception not expected');
             }
         }
+    }
+
+    /**
+     * @dataProvider providerBadUrls
+     * @expectedException \Router\Exception\NotFound
+     * @param string $method
+     * @param string $uri
+     */
+    public function testResolve_MethodWithUrl_NotFound(string $method, string $uri)
+    {
+        (new Router())
+            ->setBasePath(__DIR__ . '/../../share')
+            ->setPatternField(self::PATTERN_FIELD)
+            ->setSchema('site')
+            ->setMethod($method)
+            ->setUri($uri)
+            ->resolve();
+    }
+
+    /**
+     * @return array
+     */
+    public function providerBadUrls()
+    {
+        return [
+            'subSchemaNotFoundUri' => [
+                'get',
+                '/test/v4/ts'
+            ],
+            'notExistsBaseInSubRoute' => [
+                'get',
+                '/sub',
+            ],
+            'notExistsInSubSubRoute' => [
+                'get',
+                '/sub/sun/v4/ts',
+            ],
+            'fakeRoute' => [
+                'get',
+                '/jj',
+            ],
+            'methodNotMatch' => [
+                'get',
+                '/shop/shop-name/user/934/edit'
+            ],
+        ];
     }
 }

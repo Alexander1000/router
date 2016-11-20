@@ -40,18 +40,6 @@ return [
             'controller' => 'AdminController'
         ]
     ],
-    // #4
-    [
-        'get',
-        '/test/v4/ts',
-        []
-    ],
-    // #5
-    [
-        'get',
-        '/sub',
-        []
-    ],
     // #6
     [
         'get',
@@ -89,18 +77,6 @@ return [
             'action' => 'dk',
             'controller' => 'AdminController'
         ]
-    ],
-    // #10
-    [
-        'get',
-        '/sub/sun/v4/ts',
-        []
-    ],
-    // #11
-    [
-        'get',
-        '/jj',
-        []
     ],
     // #12
     [
@@ -157,11 +133,5 @@ return [
             'param1' => 'test',
             'param2' => 'test2'
         ]
-    ],
-    // #17
-    [
-        'get',
-        '/shop/shop-name/user/934/edit',
-        []
     ],
 ];

@@ -181,12 +181,21 @@ class Router implements IRouter
                 } elseif (strlen($this->uri) == strlen($matches[0])) {
                     array_shift($matches);
                     $this->setVars(array_merge($this->vars, array_combine($this->placeholders, $matches)));
-                    return new Request($routeInfo + ['params' => $this->vars]);
+                    return $this->makeRequest($routeInfo + ['params' => $this->vars]);
                 }
             }
         }
 
         throw new Exception\NotFound();
+    }
+
+    /**
+     * @param array $params
+     * @return IRequest
+     */
+    private function makeRequest(array $params)
+    {
+        return new Request($params);
     }
 
     /**
