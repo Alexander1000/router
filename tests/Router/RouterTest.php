@@ -3,7 +3,6 @@
 namespace Tests\Router;
 
 use Router\Router;
-use Router\Exception\NotFound;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
