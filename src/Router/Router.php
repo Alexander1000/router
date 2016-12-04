@@ -193,7 +193,7 @@ class Router implements IRouter
      * @param array $params
      * @return IRequest
      */
-    private function makeRequest(array $params)
+    protected function makeRequest(array $params)
     {
         return new Request($params);
     }
