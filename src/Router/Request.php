@@ -1,23 +1,72 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Router;
 
-class Request implements IRequest
+class Request implements RequestInterface
 {
-    protected $data;
+    private $get;
+    private $post;
+    private $cookie;
+    private $server;
+    private $files;
 
-    public function __construct(array $data = [])
+    private $args;
+
+    private static $instance;
+
+    public function __construct(array $get, array $post, array $cookie, array $server, array $files)
     {
-        $this->data = $data;
+        $this->get = $get;
+        $this->post = $post;
+        $this->cookie = $cookie;
+        $this->server = $server;
+        $this->files = $files;
     }
 
-    public function __get($name)
+    /**
+     * @return RequestInterface
+     */
+    public static function instance(): RequestInterface
     {
-        return isset($this->data[$name]) ? $this->data[$name] : null;
+        if (!static::$instance) {
+            static::$instance = new static($_GET, $_POST, $_COOKIE, $_SERVER, $_FILES);
+        }
+        
+        return static::$instance;
     }
 
-    public function __set($name, $value)
+    /**
+     * @param array $args
+     * @return $this
+     */
+    public function setArgs(array $args)
     {
-        $this->data[$name] = $value;
+        $this->args = $args;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return null
+     */
+    public function getArg(string $name)
+    {
+        return $this->args[$name] ?? null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getUri(): ?string
+    {
+        return $this->server['REQUEST_URI'] ?? null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return $this->server['REQUEST_METHOD'];
     }
 }

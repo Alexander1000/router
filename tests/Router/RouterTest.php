@@ -2,12 +2,11 @@
 
 namespace Tests\Router;
 
+use Router\Request;
 use Router\Router;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
-    const PATTERN_FIELD = 'uri';
-
     /**
      * Проверка построение объектов запроса
      *
@@ -19,18 +18,16 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolve_MethodRouteParams_Request(string $method, string $uri, array $params)
     {
-        $router = new Router();
+        $request = new Request([], [], [], ['REQUEST_METHOD' => $method], []);
+        $router = new Router(__DIR__ . '/../../share', 'site', $request);
 
-        $request = $router->setBasePath(__DIR__ . '/../../share')
-            ->setPatternField(self::PATTERN_FIELD)
-            ->setSchema('site')
-            ->setMethod($method)
+        $request = $router
             ->setUri($uri)
             ->resolve();
 
         foreach ($params as $key => $value) {
-            $this->assertNotNull($request->{$key});
-            $this->assertEquals($value, $request->{$key});
+            $this->assertNotNull($request->getArg($key));
+            $this->assertEquals($value, $request->getArg($key));
         }
     }
 
@@ -172,11 +169,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolve_MethodWithUrl_NotFound(string $method, string $uri)
     {
-        (new Router())
-            ->setBasePath(__DIR__ . '/../../share')
-            ->setPatternField(self::PATTERN_FIELD)
-            ->setSchema('site')
-            ->setMethod($method)
+        $request = new Request([], [], [], ['REQUEST_METHOD' => $method], []);
+        (new Router(__DIR__ . '/../../share', 'site', $request))
             ->setUri($uri)
             ->resolve();
     }

@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Router;
 
-class Router implements IRouter
+class Router implements RouterInterface
 {
     /**
      * @var array
@@ -25,30 +25,21 @@ class Router implements IRouter
     protected $schema;
 
     /**
-     * @var string
-     */
-    protected $patternField = 'uri';
-
-    /**
      * Переменные из placeholder'ов
-     *
      * @var array
      */
     protected $vars = [];
 
     /**
      * Список placeholder'ов
-     *
      * @var string[]
      */
     protected $placeholders;
 
     /**
-     * Метод
-     *
-     * @var string
+     * @var RequestInterface
      */
-    protected $method;
+    protected $request;
 
     protected $replacement = [
         'integer' => '\d+',
@@ -56,53 +47,26 @@ class Router implements IRouter
         'string' => '[\w\d_-]+'
     ];
 
-    public function __construct()
+    /**
+     * @var string
+     */
+    protected $schemaPath;
+
+    public function __construct(string $basePath, string $schema, RequestInterface $request)
     {
-        $this->uri = $_SERVER['REQUEST_URI'] ?? null;
+        $this->basePath = $basePath;
+        $this->schema = $schema;
+        $this->request = $request;
+        $this->uri = $request->getUri();
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $uri
+     * @return $this
      */
     public function setUri(string $uri)
     {
-        $this->uri = $uri ? $uri : '/';
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSchema(string $schema)
-    {
-        $this->schema = $schema;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setBasePath(string $basePath)
-    {
-        $this->basePath = $basePath;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPatternField(string $patternField)
-    {
-        $this->patternField = $patternField;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setMethod(string $method)
-    {
-        $this->method = strtoupper($method);
+        $this->uri = $uri;
         return $this;
     }
 
@@ -139,15 +103,16 @@ class Router implements IRouter
 
     /**
      * Дополнительные проверки маршрута
-     *
      * @param array $routeInfo
-     *
      * @return bool
      */
     protected function isValid(array $routeInfo): bool
     {
         if (!empty($routeInfo['method'])) {
-            return in_array($this->method, explode(' ', strtoupper($routeInfo['method'])));
+            return in_array(
+                strtoupper($this->request->getMethod()),
+                explode(' ', strtoupper($routeInfo['method']))
+            );
         }
 
         return true;
@@ -156,12 +121,12 @@ class Router implements IRouter
     /**
      * {@inheritdoc}
      */
-    public function resolve()
+    public function resolve(): RequestInterface
     {
         $this->uri = preg_replace('/(.*?)\?.*/si', '$1', $this->uri);
 
         foreach ($this->getRoutes() as $routeInfo) {
-            $pattern = $this->filterPlaceholders($routeInfo[$this->patternField]);
+            $pattern = $this->filterPlaceholders($routeInfo['uri']);
             $regexp = sprintf('#%s#si', $pattern);
 
             if (preg_match($regexp, $this->uri, $matches) && $this->isValid($routeInfo)) {
@@ -170,7 +135,6 @@ class Router implements IRouter
 
                     return $this->getRouterFromInfo($routeInfo)
                         ->setUri(preg_replace($regexp, '', $this->uri))
-                        ->setMethod($this->method)
                         ->setVars(
                             array_merge(
                                 $this->vars,
@@ -191,17 +155,17 @@ class Router implements IRouter
 
     /**
      * @param array $params
-     * @return IRequest
+     * @return RequestInterface
      */
-    protected function makeRequest(array $params)
+    protected function makeRequest(array $params): RequestInterface
     {
-        return new Request($params);
+        return $this->request->setArgs($params);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         if (empty($this->routes)) {
             $this->routes = yaml_parse_file(sprintf('%s/%s.yml', $this->basePath, $this->schema));
@@ -211,32 +175,13 @@ class Router implements IRouter
     }
 
     /**
-     * Получаем вложенный IRouter
-     *
+     * Получаем вложенный RouterInterface
      * @param array $routeInfo
-     *
-     * @return IRouter
+     * @return RouterInterface
      */
-    protected function getRouterFromInfo(array $routeInfo)
+    protected function getRouterFromInfo(array $routeInfo): RouterInterface
     {
-        if (isset($routeInfo['class'])) {
-            $class = new $routeInfo['class']();
-        } else {
-            $class = new static();
-        }
-
-        $subRouteParts = explode('/', $routeInfo['route']);
-        $schemaName = array_pop($subRouteParts);
-
-        /** @var IRouter $class */
-        if (empty($subRouteParts)) {
-            $class->setBasePath($this->basePath);
-        } else {
-            $class->setBasePath($this->basePath . '/' . implode('/', $subRouteParts));
-        }
-
-        $class->setSchema($schemaName);
-
-        return $class;
+        $class = $routeInfo['class'] ?? static::class;
+        return new $class($this->basePath, $routeInfo['route'], $this->request);
     }
 }
