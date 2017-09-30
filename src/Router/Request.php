@@ -12,7 +12,7 @@ class Request implements RequestInterface
 
     private $args;
 
-    private static $instance;
+    protected static $instance;
 
     public function __construct(array $get, array $post, array $cookie, array $server, array $files)
     {
