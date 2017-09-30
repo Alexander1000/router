@@ -57,7 +57,7 @@ class Router implements RouterInterface
         $this->basePath = $basePath;
         $this->schema = $schema;
         $this->request = $request;
-        $this->uri = $request->getUri();
+        $this->uri = $request->getUri() ?: '/';
     }
 
     /**
@@ -66,7 +66,7 @@ class Router implements RouterInterface
      */
     public function setUri(string $uri)
     {
-        $this->uri = $uri;
+        $this->uri = $uri ?: '/';
         return $this;
     }
 
