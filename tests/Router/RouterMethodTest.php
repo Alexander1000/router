@@ -121,4 +121,86 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
 
         $request->getParam('test');
     }
+
+    /**
+     * Request GET getParams()
+     */
+    public function testGetParams_GetRequest_Success()
+    {
+        $request = new Request(
+            [
+                'var1' => 'val1',
+            ],
+            [
+                'var1' => 'val2',
+                'var2' => 'val3',
+            ],
+            [],
+            [
+                'REQUEST_METHOD' => Request::METHOD_GET
+            ],
+            []
+        );
+
+        $this->assertEquals(
+            [
+                'var1' => 'val1'
+            ],
+            $request->getParams()
+        );
+    }
+
+    /**
+     * Request POST getParams()
+     */
+    public function testGetParams_PostRequest_Success()
+    {
+        $request = new Request(
+            [
+                'var1' => 'val1',
+            ],
+            [
+                'var1' => 'val2',
+                'var2' => 'val3',
+            ],
+            [],
+            [
+                'REQUEST_METHOD' => Request::METHOD_POST
+            ],
+            []
+        );
+
+        $this->assertEquals(
+            [
+                'var1' => 'val2',
+                'var2' => 'val3',
+            ],
+            $request->getParams()
+        );
+    }
+
+    /**
+     * Request INVALID METHOD getParams()
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Method not allowed
+     */
+    public function testGetParams_InvalidRequest_Success()
+    {
+        $request = new Request(
+            [
+                'var1' => 'val1',
+            ],
+            [
+                'var1' => 'val2',
+                'var2' => 'val3',
+            ],
+            [],
+            [
+                'REQUEST_METHOD' => 'INVALID_METHOD'
+            ],
+            []
+        );
+
+        $request->getParams();
+    }
 }

@@ -1,3 +1,6 @@
+### 0.1.1
+- Добавлен метод Request::getParams()
+
 ### 0.1.0
 - Добавлен метод Request::isPost()
 - Добавлен метод Request::isGet()

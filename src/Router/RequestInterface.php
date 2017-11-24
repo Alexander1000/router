@@ -54,6 +54,13 @@ interface RequestInterface
      * @param string $paramName
      * @param mixed|null $defaultValue
      * @return mixed|null
+     * @throws \InvalidArgumentException
      */
     public function getParam(string $paramName, $defaultValue = null);
+
+    /**
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    public function getParams(): array;
 }

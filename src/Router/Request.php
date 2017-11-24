@@ -138,6 +138,7 @@ class Request implements RequestInterface
      * @param string $paramName
      * @param mixed|null $defaultValue
      * @return mixed|null
+     * @throws \InvalidArgumentException
      */
     public function getParam(string $paramName, $defaultValue = null)
     {
@@ -146,6 +147,22 @@ class Request implements RequestInterface
                 return $this->getGet($paramName, $defaultValue);
             case self::METHOD_POST:
                 return $this->getPost($paramName, $defaultValue);
+        }
+
+        throw new \InvalidArgumentException('Method not allowed');
+    }
+
+    /**
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    public function getParams(): array
+    {
+        switch ($this->getMethod()) {
+            case self::METHOD_GET:
+                return $this->get;
+            case self::METHOD_POST:
+                return $this->post;
         }
 
         throw new \InvalidArgumentException('Method not allowed');
