@@ -35,4 +35,25 @@ interface RequestInterface
      * @return bool
      */
     public function isGet(): bool;
+
+    /**
+     * @param string $paramName
+     * @param mixed|null $defaultValue
+     * @return mixed|null
+     */
+    public function getGet(string $paramName, $defaultValue = null);
+
+    /**
+     * @param string $paramName
+     * @param mixed|null $defaultValue
+     * @return mixed|null
+     */
+    public function getPost(string $paramName, $defaultValue = null);
+
+    /**
+     * @param string $paramName
+     * @param mixed|null $defaultValue
+     * @return mixed|null
+     */
+    public function getParam(string $paramName, $defaultValue = null);
 }

@@ -113,4 +113,41 @@ class Request implements RequestInterface
     {
         return $this->server['REQUEST_METHOD'] == self::METHOD_GET;
     }
+
+    /**
+     * @param string $paramName
+     * @param mixed|null $defaultValue
+     * @return mixed|null
+     */
+    public function getGet(string $paramName, $defaultValue = null)
+    {
+        return $this->get[$paramName] ?? $defaultValue;
+    }
+
+    /**
+     * @param string $paramName
+     * @param mixed|null $defaultValue
+     * @return mixed|null
+     */
+    public function getPost(string $paramName, $defaultValue = null)
+    {
+        return $this->post[$paramName] ?? $defaultValue;
+    }
+
+    /**
+     * @param string $paramName
+     * @param mixed|null $defaultValue
+     * @return mixed|null
+     */
+    public function getParam(string $paramName, $defaultValue = null)
+    {
+        switch ($this->getMethod()) {
+            case self::METHOD_GET:
+                return $this->getGet($paramName, $defaultValue);
+            case self::METHOD_POST:
+                return $this->getPost($paramName, $defaultValue);
+        }
+
+        throw new \InvalidArgumentException('Method not allowed');
+    }
 }
