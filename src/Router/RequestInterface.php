@@ -25,4 +25,14 @@ interface RequestInterface
      * @return null
      */
     public function getArg(string $name);
+
+    /**
+     * @return bool
+     */
+    public function isPost(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isGet(): bool;
 }

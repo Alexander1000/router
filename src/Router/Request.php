@@ -4,12 +4,40 @@ namespace Router;
 
 class Request implements RequestInterface
 {
+    const METHOD_POST = 'POST';
+    const METHOD_GET = 'GET';
+    const METHOD_PUT = 'PUT';
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_PATCH = 'PATCH';
+
+    /**
+     * @var array
+     */
     private $get;
+
+    /**
+     * @var array
+     */
     private $post;
+
+    /**
+     * @var array
+     */
     private $cookie;
+
+    /**
+     * @var array
+     */
     private $server;
+
+    /**
+     * @var array
+     */
     private $files;
 
+    /**
+     * @var array
+     */
     private $args;
 
     protected static $instance;
@@ -47,7 +75,7 @@ class Request implements RequestInterface
 
     /**
      * @param string $name
-     * @return null
+     * @return mixed|null
      */
     public function getArg(string $name)
     {
@@ -68,5 +96,21 @@ class Request implements RequestInterface
     public function getMethod(): string
     {
         return $this->server['REQUEST_METHOD'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPost(): bool
+    {
+        return $this->server['REQUEST_METHOD'] == self::METHOD_POST;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGet(): bool
+    {
+        return $this->server['REQUEST_METHOD'] == self::METHOD_GET;
     }
 }
