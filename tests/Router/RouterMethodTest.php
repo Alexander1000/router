@@ -72,6 +72,33 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Request getParam()
+     */
+    public function testGetPost_Data_Success()
+    {
+        $request = new Request(
+            [
+                'var1' => 'val1',
+            ],
+            [
+                'var1' => 'val2',
+                'var2' => 'val3',
+            ],
+            [],
+            [
+                'REQUEST_METHOD' => Request::METHOD_POST
+            ],
+            []
+        );
+
+        $this->assertEquals('val1', $request->getGet('var1'));
+        $this->assertEquals('val2', $request->getPost('var1'));
+        $this->assertEquals('val2', $request->getParam('var1'));
+        $this->assertEquals('val3', $request->getParam('var2', 'val000'));
+        $this->assertEquals('val000', $request->getGet('aaa', 'val000'));
+    }
+
+    /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Method not allowed
      */
