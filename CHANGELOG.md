@@ -1,6 +1,9 @@
 ### 0.1.0
 - Добавлен метод Request::isPost()
 - Добавлен метод Request::isGet()
+- Добавлен метод Request::getGet()
+- Добавлен метод Request::getPost()
+- Добавлен метод Request::getParam()
 
 ### 0.0.8
 - Баг фикс
